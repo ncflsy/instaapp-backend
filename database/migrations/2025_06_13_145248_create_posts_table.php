@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('text')->nullable();
             $table->enum('status', ['public', 'private'])->default('public');
             $table->timestamps();
-
         });
     }
 
