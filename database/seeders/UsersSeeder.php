@@ -24,5 +24,27 @@ class UsersSeeder extends Seeder
             'web' => 'https://example.com/user',
             'email_verified_at' => now(),
         ]);
+
+         User::create([
+            'name' => 'Yellow ',
+            'email' => 'yellow@gmail.com',
+            'password' => Hash::make('123'),
+            'followers' => rand(0, 100),
+            'following' => rand(0, 100),
+            'about' => 'Kucingnya Nico',
+            'web' => 'https://example.com/user',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name' => 'Ciko Ciko ',
+            'email' => 'ciko@gmail.com',
+            'password' => Hash::make('123'),
+            'followers' => rand(0, 100),
+            'following' => rand(0, 100),
+            'about' => 'Kucingnya Nico Juga',
+            'web' => 'https://example.com/user',
+            'email_verified_at' => now(),
+        ]);
     }
 }

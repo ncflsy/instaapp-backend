@@ -14,8 +14,7 @@ class PostAPIController extends Controller
     public function index()
     {
         try {
-            $posts = Post::with('user', 'likes', 'comments')->limit(10)->get();
-
+            $posts = Post::with('user', 'likes', 'comments')->inRandomOrder()->limit(10)->get();
             return response()->json([
                 'success' => true,
                 'message' => $posts->isEmpty() ? 'No posts found.' : 'Data retrieved successfully.',

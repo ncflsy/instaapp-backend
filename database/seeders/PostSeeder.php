@@ -21,5 +21,23 @@ class PostSeeder extends Seeder
                 'status' => $i % 2 == 0 ? 'public' : 'private',
             ]);
         }
+
+        for ($i = 1; $i <= 10; $i++) {
+            Post::create([
+                'user_id' => 2,
+                'image' => 'https://picsum.photos/seed/' . $i . '/600/400',
+                'text' => 'Contoh isi post ke-' . $i,
+                'status' => $i % 2 == 0 ? 'public' : 'private',
+            ]);
+        }
+
+         for ($i = 1; $i <= 10; $i++) {
+            Post::create([
+                'user_id' => 3,
+                'image' => 'https://picsum.photos/seed/' . $i . '/600/400',
+                'text' => 'Contoh isi post ke-' . $i,
+                'status' => $i % 2 == 0 ? 'public' : 'private',
+            ]);
+        }
     }
 }
