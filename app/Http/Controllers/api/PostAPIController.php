@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,74 @@ class PostAPIController extends Controller
     {
         //
     }
+
+    public function storeLike(Request $request, $id)
+    {
+        try {
+            $post = Post::find($id);
+
+            if (!$post) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Post not found.',
+                ], 404);
+            }
+
+            $search_like = Like::where('post_id', $post->post_id)->where('user_id', $request->user_id)->first();
+
+            if ($search_like) {
+               $search_like->delete();
+            }else{
+                 Like::create([
+                    'post_id' => $post->post_id,
+                    'user_id' => $request->user_id
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Like saved successfully.',
+                'data' => null
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function postComment(Request $request, $id)
+    {
+        try {
+            $post = Post::find($id);
+
+            if (!$post) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Post not found.',
+                ], 404);
+            }
+
+            $post->comments()->create([
+                'user_id' => $request->user_id,
+                'post_id' => $post->post_id,
+                'comment' => $request->comment
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment saved successfully.',
+                'data' => null
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     /**
      * Display the specified resource.
