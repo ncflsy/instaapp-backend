@@ -29,6 +29,23 @@ class PostAPIController extends Controller
         }
     }
 
+    public function getMyPost($id)
+    {
+        try {
+            $posts = Post::with('user', 'likes', 'comments')->where('user_id', $id)->get();
+            return response()->json([
+                'success' => true,
+                'message' => $posts->isEmpty() ? 'No posts found.' : 'Data retrieved successfully.',
+                'data' => $posts
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve posts.',
+            ], 500);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */
