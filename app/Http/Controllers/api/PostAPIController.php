@@ -15,7 +15,7 @@ class PostAPIController extends Controller
     public function index()
     {
         try {
-            $posts = Post::with('user', 'likes', 'comments')->inRandomOrder()->limit(10)->get();
+            $posts = Post::with('user', 'likes', 'comments')->where('status', 'public')->inRandomOrder()->limit(10)->get();
             return response()->json([
                 'success' => true,
                 'message' => $posts->isEmpty() ? 'No posts found.' : 'Data retrieved successfully.',
@@ -42,7 +42,30 @@ class PostAPIController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('posts', 'public');
+            }
+
+            $post = Post::create([
+                'user_id' => $request->user_id,
+                'image' => $imagePath,
+                'text' => $request->text ?? null,
+                'status' => $request->status ?? 'public'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Post saved successfully.',
+                'data' => $post
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function storeLike(Request $request, $id)
@@ -60,9 +83,9 @@ class PostAPIController extends Controller
             $search_like = Like::where('post_id', $post->post_id)->where('user_id', $request->user_id)->first();
 
             if ($search_like) {
-               $search_like->delete();
-            }else{
-                 Like::create([
+                $search_like->delete();
+            } else {
+                Like::create([
                     'post_id' => $post->post_id,
                     'user_id' => $request->user_id
                 ]);
